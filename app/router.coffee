@@ -27,7 +27,10 @@ Router = Backbone.Router.extend
 
     interval = setInterval ( ->
       if self.first_load
+
         if self.current_view
+          # Destroy the screen, and them render another one
+
           self.current_view.out(->
             self.render_view( self )
           )
