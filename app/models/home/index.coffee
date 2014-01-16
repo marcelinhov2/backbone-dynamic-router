@@ -1,6 +1,6 @@
-Index = Backbone.Model.extend
+View = require 'views/view'
+
+module.exports = class Index extends View
 
   initialize: () ->
     console.log 'models/home/index'
-
-module.exports = Index

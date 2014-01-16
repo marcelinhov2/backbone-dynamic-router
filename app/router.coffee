@@ -2,12 +2,13 @@ Container = require 'views/page/container'
 
 Router = Backbone.Router.extend
 
+  current_view: null
   first_load: false
 
   initialize: () ->
     container = new Container
       model: if ContainerModel? then ContainerModel
-      container: 'body'
+      el: 'body'
 
     unless container.model
       container.render( => 
@@ -24,7 +25,12 @@ Router = Backbone.Router.extend
 
     setTimeout ( =>
       if @first_load
+        # console.log @current_view
+
         view = @instanciate()
+        @current_view = view
+
+        view.render()
     ), 100
 
   mount_require_url: ->
@@ -45,6 +51,7 @@ Router = Backbone.Router.extend
     view = new view
       model: model
       route: @params
+      el: '#container'
 
     return view
 

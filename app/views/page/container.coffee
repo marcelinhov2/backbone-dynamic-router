@@ -1,12 +1,5 @@
+View = require 'views/view'
 template = require 'templates/page/container'
 
-Container = Backbone.View.extend
-
-  initialize: (@options) ->
-    
-  render: (callback) ->
-    $(@options.container).html template()
-
-    callback?()
-
-module.exports = Container
+module.exports = class Container extends View
+  template: require 'templates/page/container'

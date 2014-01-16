@@ -1,10 +1,4 @@
-template = require 'templates/home/index'
+View = require 'views/view'
 
-Index = Backbone.View.extend
-
-  initialize: (@options) ->
-    console.log @options
-
-    console.log 'views/home/index'
-
-module.exports = Index
+module.exports = class Index extends View
+  template: require 'templates/home/index'
