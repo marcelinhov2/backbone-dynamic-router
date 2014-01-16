@@ -8,10 +8,10 @@ Router = Backbone.Router.extend
   initialize: () ->
     container = new Container
       model: if ContainerModel? then ContainerModel
-      el: 'body'
+      el: '.root-view'
 
     unless container.model
-      container.render( => 
+      container.render( =>
         @first_load = true
       )
 
@@ -21,17 +21,28 @@ Router = Backbone.Router.extend
   root: 'home'
 
   director: (@params) ->
+    self = @
+
     @mount_require_url()
 
-    setTimeout ( =>
-      if @first_load
-        # console.log @current_view
+    interval = setInterval ( ->
+      if self.first_load
+        if self.current_view
+          self.current_view.out(->
+            self.render_view( self )
+          )
+        else
+          self.render_view( self )
 
-        view = @instanciate()
-        @current_view = view
-
-        view.render()
+        clearInterval interval
+        
     ), 100
+
+  render_view: (scope) ->
+    view = scope.instanciate()
+    scope.current_view = view
+
+    view.render()
 
   mount_require_url: ->
     unless @params
