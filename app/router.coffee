@@ -25,11 +25,11 @@ Router = Backbone.Router.extend
 
     @mount_require_url()
 
-    interval = setInterval ( ->
-      self.stage_manager interval
+    @interval = setInterval ( ->
+      self.stage_manager()
     ), 100
 
-  stage_manager: ( interval ) ->
+  stage_manager: ->
     if @first_load
 
       if @current_view
@@ -50,7 +50,7 @@ Router = Backbone.Router.extend
         view = @render_view( @ )
         @current_view = view  
 
-      clearInterval interval
+      clearInterval @interval
 
   render_view: (scope) ->
     view = scope.instanciate()
@@ -70,14 +70,18 @@ Router = Backbone.Router.extend
       @require_url = "#{splited_route[0]}/index"
 
   instanciate: () ->
-    model = require "models/#{@require_url}"
-    view  = require "views/#{@require_url}"
-    
-    view = new view
-      model: model
-      route: @params
-      container: '#container'
+    try
+      model = require "models/#{@require_url}"
+      view  = require "views/#{@require_url}"
+      
+      view = new view
+        model: model
+        route: @params
+        container: '#container'
 
-    return view
+      return view
+
+    clearInterval @interval
+    throw new Error("This is not an error. This is just to abort javascript")
 
 module.exports = Router
