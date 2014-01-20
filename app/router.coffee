@@ -8,7 +8,7 @@ Router = Backbone.Router.extend
   initialize: () ->
     container = new Container
       model: if ContainerModel? then ContainerModel
-      el: '.root-view'
+      container: '.root-view'
 
     unless container.model
       container.render( =>
@@ -26,26 +26,37 @@ Router = Backbone.Router.extend
     @mount_require_url()
 
     interval = setInterval ( ->
-      if self.first_load
+      self.stage_manager interval
+    ), 100
 
-        if self.current_view
-          # Destroy the screen, and them render another one
+  stage_manager: ( interval ) ->
+    if @first_load
 
-          self.current_view.out(->
-            self.render_view( self )
+      if @current_view
+        # Destroy the screen, and them render another one
+        
+        if @current_view.destroy_before
+          @current_view.out(=>
+            view = @render_view( @ )
+            @current_view = view  
           )
         else
-          self.render_view( self )
+          view = @render_view( @ )
+          @current_view.out(=>
+            @current_view = view
+          )
 
-        clearInterval interval
-        
-    ), 100
+      else
+        view = @render_view( @ )
+        @current_view = view  
+
+      clearInterval interval
 
   render_view: (scope) ->
     view = scope.instanciate()
-    scope.current_view = view
 
     view.render()
+    return view
 
   mount_require_url: ->
     unless @params
@@ -65,7 +76,7 @@ Router = Backbone.Router.extend
     view = new view
       model: model
       route: @params
-      el: '#container'
+      container: '#container'
 
     return view
 

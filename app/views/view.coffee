@@ -9,7 +9,7 @@ module.exports = class View extends Backbone.View.extend
   render: (after_render) ->
     @before_render?()
 
-    $(@options.el).prepend @template()
+    $(@options.container).prepend @template()
 
     @after_render?()
 
@@ -24,7 +24,7 @@ module.exports = class View extends Backbone.View.extend
   in: (callback) ->
     @before_in?()
 
-    $(@options.el).children(':first').fadeIn( => 
+    $(@el).fadeIn( => 
       @after_in?()
 
       callback?()
@@ -40,7 +40,7 @@ module.exports = class View extends Backbone.View.extend
   out: (callback) ->
     @before_out?()
 
-    $(@options.el).children().fadeOut( => 
+    $(@el).fadeOut( => 
       @after_in?()
 
       @destroy callback
@@ -55,7 +55,7 @@ module.exports = class View extends Backbone.View.extend
   destroy: (callback) ->
     @before_detroy?()
 
-    $(@options.el).children().remove()
+    $(@el).remove()
     
     @after_destroy?()
 
